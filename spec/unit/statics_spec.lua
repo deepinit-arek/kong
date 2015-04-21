@@ -50,6 +50,7 @@ plugins_available:
   - httplog
   - cors
   - request_transformer
+  - apianalytics
 
 ## The Kong working directory
 ## (Make sure you have read and write permissions)

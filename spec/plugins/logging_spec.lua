@@ -10,7 +10,7 @@ local stringy = require "stringy"
 uuid.seed()
 
 local STUB_GET_URL = spec_helper.STUB_GET_URL
-local TEST_CONF = "kong_TEST.yml"
+local TEST_CONF = spec_helper.get_env().conf_file
 
 local TCP_PORT = 20777
 local UDP_PORT = 20778

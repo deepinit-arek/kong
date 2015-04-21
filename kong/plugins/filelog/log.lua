@@ -1,6 +1,5 @@
--- Copyright (C) Mashape, Inc.
-
 local cjson = require "cjson"
+local basic_serializer = require "kong.plugins.log_serializers.basic"
 
 local _M = {}
 
@@ -15,7 +14,9 @@ local function log(premature, conf, message)
 end
 
 function _M.execute(conf)
-  local ok, err = ngx.timer.at(0, log, conf, ngx.ctx.log_message)
+  local message = basic_serializer.serialize(ngx)
+
+  local ok, err = ngx.timer.at(0, log, conf, message)
   if not ok then
     ngx.log(ngx.ERR, "[filelog] failed to create timer: ", err)
   end
