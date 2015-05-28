@@ -1,11 +1,11 @@
 return {
   add = { type = "table", schema = {
-      form = { type = "table" },
+      json = { type = "table" },
       headers = { type = "table" }
     }
   },
   remove = { type = "table", schema = {
-      form = { type = "table" },
+      json = { type = "table" },
       headers = { type = "table" }
     }
   }

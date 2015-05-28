@@ -121,6 +121,7 @@ build = {
 
     ["kong.plugins.response_transformer.handler"] = "kong/plugins/response_transformer/handler.lua",
     ["kong.plugins.response_transformer.body_filter"] = "kong/plugins/response_transformer/body_filter.lua",
+    ["kong.plugins.response_transformer.header_filter"] = "kong/plugins/response_transformer/header_filter.lua",
     ["kong.plugins.response_transformer.schema"] = "kong/plugins/response_transformer/schema.lua",
 
     ["kong.plugins.cors.handler"] = "kong/plugins/cors/handler.lua",

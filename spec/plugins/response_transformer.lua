@@ -2,30 +2,29 @@ local spec_helper = require "spec.spec_helpers"
 local http_client = require "kong.tools.http_client"
 local cjson = require "cjson"
 
-local STUB_GET_URL = spec_helper.STUB_GET_URL
-local STUB_POST_URL = spec_helper.STUB_POST_URL
+local STUB_GET_URL = spec_helper.PROXY_URL.."/get"
+local STUB_HEADERS_URL = spec_helper.PROXY_URL.."/response-headers"
+local STUB_POST_URL = spec_helper.PROXY_URL.."/post"
 
-describe("Request Transformer Plugin #proxy", function()
+describe("Response Transformer Plugin #proxy", function()
 
   setup(function()
     spec_helper.prepare_db()
     spec_helper.insert_fixtures {
       api = {
-        { name = "tests request_transformer", public_dns = "test5.com", target_url = "http://mockbin.com" },
+        { name = "tests response_transformer", public_dns = "response.com", target_url = "http://httpbin.org" },
       },
       plugin_configuration = {
         {
-          name = "request_transformer",
+          name = "response_transformer",
           value = {
             add = {
               headers = {"x-added:true", "x-added2:true" },
-              querystring = {"newparam:value"},
-              form = {"newformparam:newvalue"}
+              json = {"newjsonparam:newvalue"}
             },
             remove = {
               headers = { "x-to-remove" },
-              querystring = { "toremovequery" },
-              form = { "toremoveform" }
+              json = { "toremovejson" }
             }
           },
           __api = 1
@@ -41,22 +40,25 @@ describe("Request Transformer Plugin #proxy", function()
   end)
 
   describe("Test adding parameters", function()
-
+    --[[
     it("should add new headers", function()
-      local response, status = http_client.get(STUB_GET_URL, {}, {host = "test5.com"})
-      local body = cjson.decode(response)
+      local body, status, headers = http_client.get(STUB_GET_URL, {}, {host = "response.com"})
       assert.are.equal(200, status)
-      assert.are.equal("true", body.headers["x-added"])
-      assert.are.equal("true", body.headers["x-added2"])
+      assert.are.equal("true", headers["x-added"])
+      assert.are.equal("true", headers["x-added2"])
+    end)
+    --]]
+    it("should add new parameters on GET", function()
+      local response, status = http_client.get(STUB_GET_URL, {}, {host = "response.com"})
+      print(response)
+      local body = cjson.decode(response)
+      local inspect = require "inspect"
+      print(inspect(body))
+      assert.are.equal(200, status)
+      --assert.are.equal("newvalue", body.postData.params["newformparam"])
     end)
 
-    it("should add new parameters on POST", function()
-      local response, status = http_client.post(STUB_POST_URL, {}, {host = "test5.com"})
-      local body = cjson.decode(response)
-      assert.are.equal(200, status)
-      assert.are.equal("newvalue", body.postData.params["newformparam"])
-    end)
-
+    --[[
     it("should add new parameters on POST when existing params exist", function()
       local response, status = http_client.post(STUB_POST_URL, { hello = "world" }, {host = "test5.com"})
       local body = cjson.decode(response)
@@ -86,18 +88,18 @@ describe("Request Transformer Plugin #proxy", function()
       assert.are.equal(200, status)
       assert.are.equal("value", body.queryString["newparam"])
     end)
-
+    --]]
   end)
-
+  
   describe("Test removing parameters", function()
-
+    --[[
     it("should remove a header", function()
-      local response, status = http_client.get(STUB_GET_URL, {}, {host = "test5.com", ["x-to-remove"] = "true"})
-      local body = cjson.decode(response)
+      local _, status, headers = http_client.get(STUB_HEADERS_URL, { ["x-to-remove"] = "true"}, {host = "response.com"})
       assert.are.equal(200, status)
-      assert.falsy(body.headers["x-to-remove"])
+      assert.falsy(headers["x-to-remove"])
     end)
 
+    
     it("should remove parameters on POST", function()
       local response, status = http_client.post(STUB_POST_URL, {["toremoveform"] = "yes", ["nottoremove"] = "yes"}, {host = "test5.com"})
       local body = cjson.decode(response)
@@ -121,7 +123,7 @@ describe("Request Transformer Plugin #proxy", function()
       assert.falsy(body.queryString["toremovequery"])
       assert.are.equal("yes", body.queryString["nottoremove"])
     end)
-
+     --]]
   end)
-
+ 
 end)
