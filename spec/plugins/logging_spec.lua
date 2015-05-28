@@ -1,10 +1,10 @@
+local IO = require "kong.tools.io"
+local yaml = require "yaml"
+local uuid = require "uuid"
+local cjson = require "cjson"
+local stringy = require "stringy"
 local spec_helper = require "spec.spec_helpers"
 local http_client = require "kong.tools.http_client"
-local cjson = require "cjson"
-local yaml = require "yaml"
-local IO = require "kong.tools.io"
-local uuid = require "uuid"
-local stringy = require "stringy"
 
 -- This is important to seed the UUID generator
 uuid.seed()
