@@ -311,9 +311,16 @@ function _M.send_signal(args_config, signal)
   end
 
   if signal == STOP and success then
-    if IO.file_exists(kong_config.pid_file) then
-      os.execute("while [ -f "..kong_config.pid_file.." ]; do sleep 0.1; done")
+    local waited = 0
+    while check_port(kong_config.proxy_port) or check_port(kong_config.proxy_ssl_port) or check_port(kong_config.admin_api_port) do
+      if waited * 0.1 > 10 then -- 10 second timeout
+        cutils.logger:error_exit("Can't terminate Kong")
+      else
+        os.execute("sleep 0.1")
+        waited = waited + 0.1  
+      end
     end
+
   end
 
   return success
