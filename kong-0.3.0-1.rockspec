@@ -118,6 +118,10 @@ build = {
     ["kong.plugins.ratelimiting.handler"] = "kong/plugins/ratelimiting/handler.lua",
     ["kong.plugins.ratelimiting.access"] = "kong/plugins/ratelimiting/access.lua",
     ["kong.plugins.ratelimiting.schema"] = "kong/plugins/ratelimiting/schema.lua",
+    
+    ["kong.plugins.sizelimiting.handler"] = "kong/plugins/sizelimiting/handler.lua",
+    ["kong.plugins.sizelimiting.access"] = "kong/plugins/sizelimiting/access.lua",
+    ["kong.plugins.sizelimiting.schema"] = "kong/plugins/sizelimiting/schema.lua",
 
     ["kong.plugins.request_transformer.handler"] = "kong/plugins/request_transformer/handler.lua",
     ["kong.plugins.request_transformer.access"] = "kong/plugins/request_transformer/access.lua",
