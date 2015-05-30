@@ -311,8 +311,8 @@ function _M.send_signal(args_config, signal)
   end
 
   if signal == STOP and success then
-    while check_port(kong_config.proxy_port) or check_port(kong_config.proxy_ssl_port) or check_port(kong_config.admin_api_port) do
-      os.execute("sleep 0.1")
+    if IO.file_exists(kong_config.pid_file) then
+      os.execute("while [ -f "..kong_config.pid_file.." ]; do sleep 0.1; done")
     end
   end
 
